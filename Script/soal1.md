@@ -147,3 +147,6 @@
         netmask 255.255.255.0
         gateway 10.92.5.1
     ``` 
+
+2. Topologi
+   ![alt text](Assets/No1_topologi.png)
