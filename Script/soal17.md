@@ -29,7 +29,7 @@ zone `/etc/bind/jarkom/K57.com` dibuat ulang oleh `/root/script.sh` setiap kali 
 nano /root/script.sh
 ```
 
-2. naikkan serial zone forward `K57.com` (baris 40) dari `2026092904` menjadi `2026093001`
+2. naikkan serial zone forward `K57.com` (baris 48) dari `2026092904` menjadi `2026093001`
 ```bash
 echo '@ IN SOA prab.K57.com. root.K57.com. ( 2026093001 604800 86400 2419200 604800 )' >> /etc/bind/jarkom/K57.com
 ```
@@ -58,13 +58,51 @@ echo 'epsilon IN TXT "epsilon"' >> /etc/bind/jarkom/K57.com
 
 ![alt text](<Assets/No17_%2305_tambah record txt prab.png>)
 
+#### Perubahan `/root/script.sh` (bagian `# 4. Forward Zone File K57.com`)
+
+sebelum (hasil soal 1 - 8):
+```bash
+# 4. Forward Zone File K57.com
+echo '$TTL 604800' > /etc/bind/jarkom/K57.com
+echo '@ IN SOA prab.K57.com. root.K57.com. ( 2026092904 604800 86400 2419200 604800 )' >> /etc/bind/jarkom/K57.com
+# ... NS, A record, dan CNAME www tidak berubah (baris 49 - 69)
+echo 'static IN CNAME abbey.K57.com.' >> /etc/bind/jarkom/K57.com
+```
+
+sesudah:
+```bash
+# 4. Forward Zone File K57.com
+echo '$TTL 604800' > /etc/bind/jarkom/K57.com
+echo '@ IN SOA prab.K57.com. root.K57.com. ( 2026093001 604800 86400 2419200 604800 )' >> /etc/bind/jarkom/K57.com
+# ... NS, A record, dan CNAME www tidak berubah (baris 49 - 69)
+echo 'static IN CNAME abbey.K57.com.' >> /etc/bind/jarkom/K57.com
+echo 'alpha IN TXT "alpha"' >> /etc/bind/jarkom/K57.com
+echo 'beta IN TXT "beta"' >> /etc/bind/jarkom/K57.com
+echo 'gamma IN TXT "gamma"' >> /etc/bind/jarkom/K57.com
+echo 'delta IN TXT "delta"' >> /etc/bind/jarkom/K57.com
+echo 'epsilon IN TXT "epsilon"' >> /etc/bind/jarkom/K57.com
+```
+
+ringkasan perubahan (`-` baris lama, `+` baris baru):
+```diff
+- echo '@ IN SOA prab.K57.com. root.K57.com. ( 2026092904 604800 86400 2419200 604800 )' >> /etc/bind/jarkom/K57.com
++ echo '@ IN SOA prab.K57.com. root.K57.com. ( 2026093001 604800 86400 2419200 604800 )' >> /etc/bind/jarkom/K57.com
+  echo 'static IN CNAME abbey.K57.com.' >> /etc/bind/jarkom/K57.com
++ echo 'alpha IN TXT "alpha"' >> /etc/bind/jarkom/K57.com
++ echo 'beta IN TXT "beta"' >> /etc/bind/jarkom/K57.com
++ echo 'gamma IN TXT "gamma"' >> /etc/bind/jarkom/K57.com
++ echo 'delta IN TXT "delta"' >> /etc/bind/jarkom/K57.com
++ echo 'epsilon IN TXT "epsilon"' >> /etc/bind/jarkom/K57.com
+```
+bagian lain `script.sh` (install bind9, `named.conf.local`, zone reverse, options, resolv.conf) tidak berubah
+
 4. cek perubahan, jalankan script, dan cek file zone
 ```bash
 grep -n "SOA\|TXT" /root/script.sh
 bash /root/script.sh
 named-checkzone K57.com /etc/bind/jarkom/K57.com
 ```
-- baris 40 serial baru, baris 71 - 75 TXT record, SOA zone reverse (baris 80, 87, 94) tetap
+- baris 48 serial baru, baris 71 - 75 TXT record, SOA zone reverse (baris 80, 87, 94) tetap
 - `script.sh` membuat ulang file zone lalu restart `named`
 - `named-checkzone` : `loaded serial 2026093001` dan `OK`, file zone valid
 - pesan `Err` / `W:` dari `trixie-updates` adalah masalah signature repository Debian, tidak berhubungan dengan soal ini (bind9 sudah terinstall)
