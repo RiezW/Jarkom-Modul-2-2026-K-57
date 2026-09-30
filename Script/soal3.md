@@ -10,7 +10,7 @@
     jalanin pake `bash /root/script.sh`
 
 2. configure : <br>
-   tambah line dibawah gateway
+   tambah line dibawah gateway di configure
    ```bash
     up bash /root/script.sh
    ```
