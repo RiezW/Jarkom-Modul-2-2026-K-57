@@ -8,7 +8,7 @@ apt-get install -y apache2
 service apache2 start
 ```
 container tidak pakai systemd, jadi apache dijalankan manual pakai `service`
-![alt text](<Assets/No9_install apache.png>)
+![alt text](<Assets/No09_%2302_install apache.png>)
 
 2. buat isi web + folder arsip <br>
    di `/arsip/` sengaja tidak ada `index.html`, supaya autoindex (directory listing) muncul
@@ -40,7 +40,7 @@ done
 - `Options +Indexes` : mengaktifkan autoindex di folder `/arsip`
 - `CustomLog ... combined` : log akses sendiri (dipakai lagi di soal 14)
 
-![alt text](<Assets/No9_config vhost.png>)
+![alt text](<Assets/No09_%2305_config vhost.png>)
 
 4. aktifkan site
 ```bash
@@ -51,7 +51,7 @@ service apache2 restart
 apache2ctl -S
 ```
 `000-default` dimatikan supaya request yang tidak cocok hostname tetap masuk ke site vault
-![alt text](<Assets/No9_enable site.png>)
+![alt text](<Assets/No09_%2306_enable site.png>)
 
 5. script lengkap `/root/soal9.sh` (sama untuk obladi dan desmond, nama node diambil dari `$(hostname)`)
 ```bash
@@ -95,7 +95,7 @@ curl -H "Host: vault.K57.com" http://10.92.1.4/arsip/
 lynx -dump http://localhost/arsip/
 ```
 obladi:
-![alt text](<Assets/No9_test arsip obladi.png>)
+![alt text](<Assets/No09_%2309_test arsip obladi 2.png>)
 
 desmond:
-![alt text](<Assets/No9_test desmond.png>)
+![alt text](<Assets/No09_%2312_test desmond.png>)

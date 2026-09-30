@@ -24,7 +24,7 @@ apache2ctl -M | grep -E "proxy|lbmethod|headers"
 - `proxy_balancer`, `lbmethod_byrequests` : membagi request ke beberapa backend secara bergantian (round-robin)
 - `headers` : untuk menambahkan header `X-Real-IP`
 
-![alt text](<Assets/No11_enable modul proxy.png>)
+![alt text](<Assets/No11_%2303_enable modul proxy.png>)
 
 2. config virtualhost di `/etc/apache2/sites-available/penny.conf`
 ```apache
@@ -53,7 +53,7 @@ apache2ctl -M | grep -E "proxy|lbmethod|headers"
 - `RequestHeader set X-Real-IP "expr=%{REMOTE_ADDR}"` : forwarding header **X-Real-IP** berisi IP client asli
 - `ProxyPassReverse` : redirect dari backend (misal `/arsip` ke `/arsip/`) diubah ke nama penny, bukan IP backend
 
-![alt text](<Assets/No11_cek config penny.png>)
+![alt text](<Assets/No11_%2327_cek config penny.png>)
 
 3. aktifkan site
 ```bash
@@ -62,7 +62,7 @@ a2dissite 000-default
 apache2ctl configtest
 service apache2 restart
 ```
-![alt text](<Assets/No11_enable site penny.png>)
+![alt text](<Assets/No11_%2305_enable site penny.png>)
 
 4. testing dari abbey (sebagai client)
 ```bash
@@ -74,7 +74,7 @@ curl -H "Host: www.K57.com" http://10.92.3.2/arsip/
 curl -I -H "Host: www.K57.com" http://10.92.3.2/arsip
 ```
 request bergantian obladi - desmond (load balancing berhasil), `/arsip/` tetap bisa dibuka lewat proxy, redirect `/arsip` mengarah ke `www.k57.com`
-![alt text](<Assets/No11_test balancing penny.png>)
+![alt text](<Assets/No11_%2306_test balancing penny.png>)
 
 bukti header sampai di backend, pakai `tcpdump` di obladi (request dikirim dari abbey)
 ```bash
@@ -84,7 +84,7 @@ tcpdump -A -i eth0 -c 10 port 80
 - `Host: www.K57.com`
 - `X-Real-IP: 10.92.2.2` (IP abbey, client asli)
 
-![alt text](<Assets/No11_tcpdump header penny.png>)
+![alt text](<Assets/No11_%2314_tcpdump header penny.png>)
 
 ### Abbey (Nginx)
 
@@ -94,7 +94,7 @@ apt-get update
 apt-get install -y nginx
 service nginx start
 ```
-![alt text](<Assets/No11_cek nginx abbey.png>)
+![alt text](<Assets/No11_%2316_cek nginx abbey.png>)
 
 6. config di `/etc/nginx/sites-available/abbey`
 ```nginx
@@ -124,7 +124,7 @@ server {
 - `proxy_set_header Host $host` : forwarding header **Host**
 - `proxy_set_header X-Real-IP $remote_addr` : forwarding header **X-Real-IP**
 
-![alt text](<Assets/No11_config abbey.png>)
+![alt text](<Assets/No11_%2319_tambah zone abbey.png>)
 
 7. aktifkan site
 ```bash
@@ -133,7 +133,7 @@ rm -f /etc/nginx/sites-enabled/default
 nginx -t
 service nginx restart
 ```
-![alt text](<Assets/No11_restart nginx abbey.png>)
+![alt text](<Assets/No11_%2320_restart nginx abbey.png>)
 
 8. testing dari penny (sebagai client)
 ```bash
@@ -143,14 +143,14 @@ curl -H "Host: static.K57.com" http://10.92.2.2/
 curl -H "Host: static.K57.com" http://10.92.2.2/
 ```
 request bergantian oblada - molly
-![alt text](<Assets/No11_test balancing abbey.png>)
+![alt text](<Assets/No11_%2321_test balancing abbey.png>)
 
 bukti header, `tcpdump` di oblada (request dikirim dari penny)
 - paket datang dari abbey (`10.92.2.2`)
 - `Host: static.k57.com`
 - `X-Real-IP: 10.92.3.2` (IP penny, client asli)
 
-![alt text](<Assets/No11_tcpdump header abbey.png>)
+![alt text](<Assets/No11_%2322_tcpdump header abbey.png>)
 
 ### Script
 
@@ -239,17 +239,17 @@ curl http://static.K57.com/
 `www` (CNAME ke penny) dan `static` (CNAME ke abbey) tetap membagi request ke dua backend
 
 dari abbey ke `www.K57.com`:
-![alt text](<Assets/No11_test hostname www.png>)
+![alt text](<Assets/No11_%2328_test hostname www.png>)
 
 dari penny ke `static.K57.com`:
-![alt text](<Assets/No11_test hostname static.png>)
+![alt text](<Assets/No11_%2329_test hostname static.png>)
 
 ### Catatan perbaikan
 
 - awalnya penny memakai `RequestHeader set X-Real-IP "%{REMOTE_ADDR}s"`, hasilnya `X-Real-IP: (null)`, karena akhiran `s` di mod_headers berarti variabel SSL (mod_ssl). Diganti menjadi `"expr=%{REMOTE_ADDR}"`
 
-![alt text](<Assets/No11_tcpdump x-real-ip null.png>)
+![alt text](<Assets/No11_%2307_tcpdump x-real-ip null.png>)
 
 - awalnya abbey tidak bergantian (oblada terus), karena tiap worker nginx punya hitungan round-robin sendiri. Ditambahkan `zone core 64k;` di upstream supaya hitungannya dibagi ke semua worker
 
-![alt text](<Assets/No11_test abbey tidak rata.png>)
+![alt text](<Assets/No11_%2318_test abbey tidak rata.png>)

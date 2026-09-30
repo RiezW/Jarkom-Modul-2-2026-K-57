@@ -17,19 +17,19 @@ request dari alpha ke `www.K57.com` (lewat penny)
 curl http://www.K57.com/
 curl http://www.K57.com/
 ```
-![alt text](<Assets/No14_request alpha.png>)
+![alt text](<Assets/No14_%2303_request alpha ke www sebelum.png>)
 
 log obladi mencatat `10.92.3.2` (penny), bukan alpha
 ```bash
 tail -n 3 /var/log/apache2/vault_access.log
 ```
-![alt text](<Assets/No14_log obladi sebelum.png>)
+![alt text](<Assets/No14_%2304_log obladi sebelum.png>)
 
 log oblada mencatat `10.92.2.2` (abbey), bukan alpha
 ```bash
 tail -n 2 /var/log/nginx/core_access.log
 ```
-![alt text](<Assets/No14_log oblada sebelum.png>)
+![alt text](<Assets/No14_%2313_log oblada sebelum.png>)
 
 ### Area vault (Apache)
 
@@ -63,7 +63,7 @@ a2enmod remoteip
 - `CustomLog ... realip` : access log memakai format `realip`
 - di desmond sama, hanya `ServerAlias desmond.K57.com`
 
-![alt text](<Assets/No14_config obladi.png>)
+![alt text](<Assets/No14_%2305_config remoteip obladi.png>)
 
 3. cek config dan restart
 ```bash
@@ -74,10 +74,10 @@ service apache2 restart
 4. hasil, request dari alpha sekarang tercatat `10.92.4.2`
 
 obladi:
-![alt text](<Assets/No14_log obladi sesudah.png>)
+![alt text](<Assets/No14_%2306_log obladi sesudah.png>)
 
 desmond:
-![alt text](<Assets/No14_log desmond sesudah.png>)
+![alt text](<Assets/No14_%2311_log desmond sesudah.png>)
 
 ### Area core (Nginx)
 
@@ -109,7 +109,7 @@ server {
 - format log default nginx sudah memakai `$remote_addr`, dan nilai itu yang diganti oleh modul realip, jadi format log tidak perlu diubah
 - di molly sama, hanya `server_name core.K57.com molly.K57.com`
 
-![alt text](<Assets/No14_config oblada.png>)
+![alt text](<Assets/No14_%2314_config realip oblada.png>)
 
 6. cek config dan restart
 ```bash
@@ -120,10 +120,10 @@ service nginx restart
 7. hasil, request dari alpha ke `static.K57.com` sekarang tercatat `10.92.4.2`
 
 oblada:
-![alt text](<Assets/No14_log oblada sesudah.png>)
+![alt text](<Assets/No14_%2317_log oblada sesudah.png>)
 
 molly:
-![alt text](<Assets/No14_log molly sesudah.png>)
+![alt text](<Assets/No14_%2321_log molly sesudah.png>)
 
 ### Script
 
@@ -190,6 +190,6 @@ SCRIPT
 ```
 script menulis ulang seluruh config (config soal 9 / 10 + tambahan soal 14), jadi urutannya harus `soal9.sh` / `soal10.sh` dulu, baru `soal14.sh`
 
-![alt text](<Assets/No14_script vault.png>)
+![alt text](<Assets/No14_%2322_simpan script obladi.png>)
 
-![alt text](<Assets/No14_script core.png>)
+![alt text](<Assets/No14_%2324_simpan script oblada molly.png>)

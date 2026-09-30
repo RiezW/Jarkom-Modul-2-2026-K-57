@@ -9,7 +9,7 @@ service php8.4-fpm start
 service nginx start
 ```
 nginx tidak bisa menjalankan php sendiri, request `.php` diteruskan ke PHP-FPM lewat socket `/run/php/php8.4-fpm.sock`, jadi dua service ini harus jalan
-![alt text](<Assets/No10_install nginx php.png>)
+![alt text](<Assets/No10_%2302_install nginx php.png>)
 
 2. buat halaman beranda (`index.php`) dan profil (`profil.php`)
 ```bash
@@ -45,7 +45,7 @@ EOF
 - `date()` : waktu server, berubah setiap request, bukti halaman dibuat oleh PHP (dinamis)
 - `<<'EOF'` pakai tanda kutip supaya `<?= ?>` tidak diproses oleh shell
 
-![alt text](<Assets/No10_buat halaman php.png>)
+![alt text](<Assets/No10_%2304_buat halaman php.png>)
 
 3. config nginx di `/etc/nginx/sites-available/core`
 ```nginx
@@ -73,7 +73,7 @@ server {
 - `location ~ \.php$` : semua file `.php` diteruskan ke PHP-FPM
 - `access_log` : log akses sendiri (dipakai lagi di soal 14)
 
-![alt text](<Assets/No10_config nginx.png>)
+![alt text](<Assets/No10_%2305_config nginx.png>)
 
 4. aktifkan site
 ```bash
@@ -83,7 +83,7 @@ nginx -t
 service nginx restart
 ```
 site `default` dimatikan supaya request yang tidak cocok hostname tetap masuk ke site core
-![alt text](<Assets/No10_enable site.png>)
+![alt text](<Assets/No10_%2306_enable site.png>)
 
 5. script lengkap `/root/soal10.sh` (sama untuk oblada dan molly, nama node diambil dari `$(hostname)`)
 ```bash
@@ -163,7 +163,7 @@ curl -H "Host: core.K57.com" http://10.92.1.6/profil
 - dari node lain (penny) juga bisa diakses
 
 oblada:
-![alt text](<Assets/No10_test oblada.png>)
+![alt text](<Assets/No10_%2307_test oblada.png>)
 
 molly:
-![alt text](<Assets/No10_test molly.png>)
+![alt text](<Assets/No10_%2313_test molly.png>)
